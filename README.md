@@ -1,6 +1,6 @@
 # Dreamscape
 
-## Dreamscape is an online journal for your dreams. Writing down your dreams will improve your dream memory and can be beneficial in many ways, such as:
+### Dreamscape is an online journal for your dreams. Writing down your dreams will improve your dream memory and can be beneficial in many ways, such as:
 
 - learn how to lucid dream
 - solve problems in your dreams
