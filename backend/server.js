@@ -5,8 +5,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import { userRouter } from "./routes/UserRoutes.js";
 
-// await mongoose.connect(process.env.DB);
-await mongoose.connect("mongodb+srv://jennydreamatrix:4K4vAdW2i0t24GF0@mycluster.ey1qs4d.mongodb.net/Dreamscape");
+await mongoose.connect(process.env.DB);
 await mongoose.connection.syncIndexes();
 
 const PORT = process.env.PORT || 3001;
