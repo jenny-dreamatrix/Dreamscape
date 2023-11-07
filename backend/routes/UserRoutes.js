@@ -1,8 +1,8 @@
 import { Router } from "express";
 import multer from "multer";
-import User from "./UserModel.js";
-import { authenticateToken, generateAccessToken } from "./authToken.js";
-import { createResetToken, validateResetToken } from "./ResetTokenModel.js";
+import User from "../models/UserModel.js";
+import { authenticateToken, generateAccessToken } from "../token/authToken.js";
+import { createResetToken, validateResetToken } from "../token/ResetTokenModel.js";
 
 export const userRouter = Router();
 
@@ -85,7 +85,7 @@ userRouter.get("/secure", authenticateToken, async (req, res) => {
 
 userRouter.get("/profile", authenticateToken, async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.userEmail }).populate("posts");
+    const user = await User.findOne({ email: req.userEmail });
     res.json(user);
   } catch (err) {
     console.log(err);

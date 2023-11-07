@@ -33,7 +33,7 @@ export default function SignUp() {
     }
   };
 
-  const goToEditProfile = () => {
+  const goToProfile = () => {
     nav("/profile");
     clearTimeout(waitForNavigation)
   }
@@ -50,7 +50,7 @@ export default function SignUp() {
           const { data } = await axios.post("/api/user/login", loginInput);
           if (data) {
             setRefresh((prev) => !prev);
-            waitForNavigation = setTimeout(goToEditProfile, 3000);
+            waitForNavigation = setTimeout(goToProfile, 3000);
           }
         } catch (e) {
           console.log(e);
@@ -80,7 +80,7 @@ export default function SignUp() {
       {error && <small style={{ color: "red" }}>{error}</small>}
       <button type="submit" className="sign-btn">Sign up</button>
     </form>
-    {success && <p className="sign-up-info-text">Sign up was successful. Logging in and forwarding to edit your Profile..</p>}
+    {success && <p className="sign-up-info-text">Sign up was successful. Logging in and forwarding to your Profile..</p>}
     
       <div className="sign-in-user">
         <p>Already have an account?</p>

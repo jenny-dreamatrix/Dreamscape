@@ -1,6 +1,6 @@
 import crypto from "crypto";
+import User from "../models/UserModel.js";
 import { Schema, model } from "mongoose";
-import User from "./UserModel.js";
 import { passwordResetMailTemplate } from "../lib/mailTemplates.js";
 import { sendMail } from "../lib/sendMail.js";
 
@@ -24,7 +24,7 @@ const resetTokenSchema = new Schema({
 export const ResetToken = model("ResetToken", resetTokenSchema);
 
 export const createResetToken = async (userEmail) => {
-  // Check if user exists
+  // check if user exists
   const user = await User.findOne({ email: userEmail });
   if (!user) {
     throw new Error("No User with this email");
@@ -40,7 +40,7 @@ export const createResetToken = async (userEmail) => {
   await ResetToken.create({
     userId: user.id,
     token: resetToken,
-    // Optional dank default value
+    // optional dank default value
     createdAt: Date.now(),
   });
 

@@ -7,17 +7,17 @@ const mailgun = new Mailgun(FormData);
 // Our sandbox domain form mailgun
 const sandbox = "sandbox4772d961c0324582bf788c1be8b528d7.mailgun.org";
 
-// When send mail gets no parameter use this default setup
+// when send mail gets no parameter use this default setup
 const defaultOptions = {
-  to: ["oliver@super-code.de"],
+  to: ["jenny.dreamatrix@gmail.com"],
   subject: "Hello",
-  html: "<h1>Testing some Mailgun awesomeness!</h1>",
+  html: "<h1>This is a test!</h1>",
 };
 
-// Mailgun client cache
+// mailgun client cache
 // on first run we create a mailgun client
-// once the client is created we can skip this
-// process
+// once the client is created we can skip this process
+
 let mg;
 
 export const sendMail = ({ to, subject, html } = defaultOptions) => {
@@ -31,7 +31,7 @@ export const sendMail = ({ to, subject, html } = defaultOptions) => {
   }
 
   return mg.messages.create(sandbox, {
-    from: `Excited User <mailgun@${sandbox}>`,
+    from: `User <mailgun@${sandbox}>`,
     to: to,
     subject: subject,
     html: html,

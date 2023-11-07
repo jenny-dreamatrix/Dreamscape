@@ -3,13 +3,10 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-/**
- * Depending on the presents of the necessary
- * query parameter `localhost:3000/passwordReset?token=...&id=...`
- * renders RequestReset which lets you start
- * the reset process -> make the server send a mail
- * or submit new password with token to change password aka confirm
- */
+// depending on the presents of the necessary query parameter `localhost:3000/passwordReset?token=...&id=...`
+// renders RequestReset which lets you start the reset process -> make the server send a mail
+// or submit new password with token to change password aka confirm
+
 export default function ResetPassword() {
   const [query] = useSearchParams();
 
@@ -25,9 +22,8 @@ export default function ResetPassword() {
   );
 }
 
-/**
- * Component to start a reset Process
- */
+// component to start a reset process
+
 function RequestReset() {
   const [confirmed, setConfirmed] = useState(false);
   const [error, setError] = useState(null);
@@ -57,9 +53,8 @@ function RequestReset() {
   );
 }
 
-/**
- * Confirm your new password
- */
+// confirm your new password
+
 function ConfirmReset({ id, token }) {
   const nav = useNavigate();
   const [error, setError] = useState(null);

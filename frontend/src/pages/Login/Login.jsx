@@ -23,7 +23,7 @@ export default function Login() {
       const { data } = await axios.post("/api/user/login", loginInput);
       if (data) {
         setRefresh((prev) => !prev);
-        navigate("/home");
+        navigate("/profile");
       }
     } catch (e) {
       console.log(e);

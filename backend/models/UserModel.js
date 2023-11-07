@@ -1,5 +1,4 @@
 import crypto from "crypto";
-import e from "express";
 import { Schema, model } from "mongoose";
 
 const isEmail = (string) => {

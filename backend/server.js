@@ -3,7 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import path from "path";
 import cookieParser from "cookie-parser";
-import { userRouter } from "./user/routes.js";
+import { userRouter } from "./routes/UserRoutes.js";
 
 // await mongoose.connect(process.env.DB);
 await mongoose.connect("mongodb+srv://jennydreamatrix:4K4vAdW2i0t24GF0@mycluster.ey1qs4d.mongodb.net/Dreamscape");
@@ -35,5 +35,5 @@ app.get("/*", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log("Server running on Port: ", PORT);
+  console.log("Server is running on Port: ", PORT);
 });
