@@ -15,7 +15,7 @@ const isEmail = (string) => {
 };
 
 export const userSchema = new Schema({
-  name: { type: String, required: [true, "Please specify your name"] },
+  name: { type: String },
   email: {
     type: String,
     unique: true,
@@ -31,10 +31,10 @@ export const userSchema = new Schema({
 });
 
 userSchema.methods.setPassword = function (password) {
-  //Salt
+  // salt
   this.salt = crypto.randomBytes(64).toString("hex");
 
-  // Password mit salt hashen
+  // password mit salt hashen
   this.hash = crypto
     .pbkdf2Sync(password, this.salt, 1000, 64, "sha512")
     .toString("hex");

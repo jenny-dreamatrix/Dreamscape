@@ -8,53 +8,17 @@ export const userRouter = Router();
 
 const multerMiddleware = multer();
 
-const hoursInMillisec = (hours) => {
-  return 1000 * 60 * 60 * hours;
-};
+// get all users -----------------------------------------------------------------------------------------------
 
 userRouter.get("/", async (req, res) => {
   const users = await User.find();
   res.send(users);
 });
 
-userRouter.post("/resetPassword", async (req, res) => {
-  const { email } = req.body;
-  try {
-    console.log("reset password for ", email);
-    await createResetToken(email);
-    return res.sendStatus(200);
-  } catch (e) {
-    if (e?.message === "No User with this email") {
-      return res.status(404).send({ error: "User not found" });
-    }
-
-    return res.status(500).send({ error: "Unknown Error occurred" });
-  }
-});
-
-userRouter.post("/resetPassword-confirm", async (req, res) => {
-  const { id, token, password } = req.body;
-  const isValidResetProcess = validateResetToken(id, token);
-  try {
-    if (!isValidResetProcess) {
-      throw new Error("NonValidResetProcess");
-    }
-
-    const user = await User.findById(id);
-    user.setPassword(password);
-
-    await user.save();
-    return res.send({
-      data: { message: "New password confirmed" },
-    });
-  } catch (e) {
-    console.log(e);
-    res.status(500).send({ error: "Something went wrong" });
-  }
-});
+// signup ------------------------------------------------------------------------------------------------------
 
 userRouter.post("/signup", multerMiddleware.none(), async (req, res) => {
-  // Neuen User erstellen
+  // neuen user erstellen
   const { name, email } = req.body;
   const newUser = new User({ name, email });
   // user.setPassword (hash und salt setzen)
@@ -86,36 +50,92 @@ userRouter.post("/signup", multerMiddleware.none(), async (req, res) => {
   }
 });
 
-userRouter.post("/login", multerMiddleware.none(), async (req, res) => {
+// login -------------------------------------------------------------------------------------------------------
+
+const hoursInMillisec = (hours) => {
+  return 1000 * 60 * 60 * hours;
+};
+
+userRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  console.log({ email, password });
   const user = await User.findOne({ email }).select("+hash").select("+salt");
-  // dieses password würde den gleichen hash produzieren
-  // (wie der in der Datenbank)
   const passwordIsValid = user.verifyPassword(password);
   if (passwordIsValid) {
     const token = generateAccessToken({ email });
-    console.log(token);
-
     res.cookie("auth", token, { httpOnly: true, maxAge: hoursInMillisec(4) });
-
-    res.send({ message: "Success", data: user });
+    res.send({ message: "success", data: user });
   } else {
     res.status(404).send({
-      message: "Failed to login",
+      message: "failed to login",
       error: {
-        message: "Password and E-Mail combination is wrong.",
+        message: "Password and E-Mail combination is wrong",
       },
     });
   }
 });
 
-userRouter.get("/logout", (req, res) => {
-  res.clearCookie("auth");
-  res.send("OK");
-});
+// secure ------------------------------------------------------------------------------------------------------
 
 userRouter.get("/secure", authenticateToken, async (req, res) => {
   console.log(req.userEmail);
   res.send({ email: req.userEmail });
+});
+
+// get user profile of logged in user --------------------------------------------------------------------------
+
+userRouter.get("/profile", authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.userEmail }).populate("posts");
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+    res.send("there was an error");
+  }
+});
+
+// reset password ----------------------------------------------------------------------------------------------
+
+userRouter.post("/resetPassword", async (req, res) => {
+  const { email } = req.body;
+  try {
+    console.log("reset password for ", email);
+    await createResetToken(email);
+    return res.sendStatus(200);
+  } catch (e) {
+    if (e?.message === "No User with this email") {
+      return res.status(404).send({ error: "User not found" });
+    }
+
+    return res.status(500).send({ error: "Unknown Error occurred" });
+  }
+});
+
+// reset password confirm --------------------------------------------------------------------------------------
+
+userRouter.post("/resetPassword-confirm", async (req, res) => {
+  const { id, token, password } = req.body;
+  const isValidResetProcess = validateResetToken(id, token);
+  try {
+    if (!isValidResetProcess) {
+      throw new Error("NonValidResetProcess");
+    }
+
+    const user = await User.findById(id);
+    user.setPassword(password);
+
+    await user.save();
+    return res.send({
+      data: { message: "New password confirmed" },
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({ error: "Something went wrong" });
+  }
+});
+
+// logout ------------------------------------------------------------------------------------------------------
+
+userRouter.get("/logout", (req, res) => {
+  res.clearCookie("auth");
+  res.send("OK");
 });

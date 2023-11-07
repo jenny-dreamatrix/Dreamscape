@@ -1,3 +1,4 @@
+import './ResetPassword.css'
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";

@@ -1,48 +1,34 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useContext } from "react";
-
-import { UserContext } from "./user/UserContext";
-
-// Routes
-import Home from "./pages/Home";
-import Signup from "./user/Signup";
-import Login from "./user/Login";
-import Profile from "./pages/Profile";
-
 import "./App.css";
-import ResetPassword from "./user/ResetPassword";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { RefreshContext } from "./context/RefreshContext";
+import { UserProvider } from "./context/UserContext";
+import { useState } from "react";
+import Home from "./pages/Home/Home";
+import UserProfile from "./pages/UserProfile/UserProfile";
+import ResetPassword from "./components/ResetPassword/ResetPassword";
+import Login from "./pages/Login/Login";
+import SignUp from "./pages/SignUp/SignUp";
+import LoadingPage from "./pages/LoadingPage/LoadingPage";
 
 function App() {
-  const { isLoggedIn, logout } = useContext(UserContext);
+  const [refresh, setRefresh] = useState(true);
 
   return (
     <>
-      <nav>
-        <a href="/">Home</a>
-        {!isLoggedIn && (
-          <>
-            <a href="/signup">Signup</a>
-            <a href="/login">Login</a>
-          </>
-        )}
-        {isLoggedIn && (
-          <>
-            <a href="/profile">Profile</a>
-            <button type="button" onClick={logout}>
-              Logout
-            </button>
-          </>
-        )}
-      </nav>
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/passwordReset" element={<ResetPassword />} />
-        </Routes>
-      </main>
+        <BrowserRouter>
+              <RefreshContext.Provider value={{ refresh, setRefresh }}>
+                <UserProvider>
+                  <Routes>
+                    <Route path="/" element={<LoadingPage />} />
+                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/profile" element={<UserProfile />} />
+                    {/* <Route path="/passwordReset" element={<ResetPassword />} /> */}
+                  </Routes>
+                </UserProvider>
+              </RefreshContext.Provider>
+        </BrowserRouter>
     </>
   );
 }
